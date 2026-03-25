@@ -71,30 +71,50 @@
       .style("margin-bottom", "32px")
       .style("font-size", "0.85rem")
       .style("color", "#888")
-      .text("Clique no Bitcoin para revelar");
+      .text("Clique no Bitcoin para revelar · Scroll para zoom · Arraste para mover");
+
+    const svgW = 300, svgH = 300;
 
     const svg = body.append("svg")
       .attr("id", "bitcoin-container")
-      .attr("width", 200)
-      .attr("height", 200);
+      .attr("width", svgW)
+      .attr("height", svgH);
 
-    const cx = 100, cy = 100, r = 85;
+    const cx = 150, cy = 150, r = 120;
 
-    svg.append("circle")
+    // Grupo interno que recebe o transform do zoom
+    const zoomGroup = svg.append("g").attr("id", "zoom-group");
+
+    zoomGroup.append("circle")
       .attr("class", "bitcoin-circle")
       .attr("cx", cx).attr("cy", cy).attr("r", r)
       .attr("fill", "#f7931a");
 
-    svg.append("g")
+    zoomGroup.append("g")
       .attr("transform", `translate(${cx}, ${cy})`)
       .append("text")
       .attr("text-anchor", "middle")
       .attr("dominant-baseline", "central")
-      .attr("font-size", "110px")
+      .attr("font-size", "160px")
       .attr("font-weight", "bold")
       .attr("fill", "#fff")
       .attr("font-family", "Arial, sans-serif")
       .text("₿");
+
+    // Zoom e Pan com d3.zoom()
+    let dragOccurred = false;
+
+    const zoom = d3.zoom()
+      .scaleExtent([0.5, 5])
+      .on("start", () => { dragOccurred = false; })
+      .on("zoom", (event) => {
+        if (event.sourceEvent && event.sourceEvent.type === "mousemove") {
+          dragOccurred = true;
+        }
+        zoomGroup.attr("transform", event.transform);
+      });
+
+    svg.call(zoom);
 
     const overlay = body.append("div")
       .style("display", "none")
@@ -154,7 +174,9 @@
       overlay.style("display", "none");
     }
 
-    svg.on("click", openModal);
+    svg.on("click", function(event) {
+      if (!dragOccurred) openModal();
+    });
     closeBtn.on("click", closeModal);
     overlay.on("click", function(event) {
       if (event.target === overlay.node()) closeModal();
