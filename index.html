@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Bitcoin D3.js</title>
+  <script src="https://d3js.org/d3.v7.min.js"></script>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      background: #0f0f0f;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      min-height: 100vh;
+      font-family: sans-serif;
+      color: #fff;
+    }
+
+    #bitcoin-container { cursor: pointer; }
+
+    .bitcoin-circle {
+      filter: drop-shadow(0 0 18px #f7931a88);
+    }
+
+    #bitcoin-container:hover .bitcoin-circle {
+      filter: drop-shadow(0 0 30px #f7931acc);
+    }
+
+    @keyframes pop {
+      from { transform: scale(0.7); opacity: 0; }
+      to   { transform: scale(1);   opacity: 1; }
+    }
+
+    .modal-box-anim {
+      animation: pop 0.25s ease;
+    }
+  </style>
+</head>
+<body>
+  <script>
+    const body = d3.select("body");
+
+    body.append("h1")
+      .style("margin-bottom", "12px")
+      .style("font-size", "1.2rem")
+      .style("color", "#f7931a")
+      .style("letter-spacing", "2px")
+      .text("BITCOIN");
+
+    body.append("p")
+      .style("margin-bottom", "32px")
+      .style("font-size", "0.85rem")
+      .style("color", "#888")
+      .text("Clique no Bitcoin para revelar");
+
+    const svg = body.append("svg")
+      .attr("id", "bitcoin-container")
+      .attr("width", 200)
+      .attr("height", 200);
+
+    const cx = 100, cy = 100, r = 85;
+
+    svg.append("circle")
+      .attr("class", "bitcoin-circle")
+      .attr("cx", cx).attr("cy", cy).attr("r", r)
+      .attr("fill", "#f7931a");
+
+    svg.append("g")
+      .attr("transform", `translate(${cx}, ${cy})`)
+      .append("text")
+      .attr("text-anchor", "middle")
+      .attr("dominant-baseline", "central")
+      .attr("font-size", "110px")
+      .attr("font-weight", "bold")
+      .attr("fill", "#fff")
+      .attr("font-family", "Arial, sans-serif")
+      .text("₿");
+
+    const overlay = body.append("div")
+      .style("display", "none")
+      .style("position", "fixed")
+      .style("inset", "0")
+      .style("background", "rgba(0,0,0,0.78)")
+      .style("align-items", "center")
+      .style("justify-content", "center")
+      .style("z-index", "100");
+
+    const box = overlay.append("div")
+      .attr("class", "modal-box-anim")
+      .style("background", "#1a1a1a")
+      .style("border", "2px solid #f7931a")
+      .style("border-radius", "16px")
+      .style("padding", "32px")
+      .style("display", "flex")
+      .style("flex-direction", "column")
+      .style("align-items", "center")
+      .style("gap", "20px")
+      .style("box-shadow", "0 0 40px #f7931a55");
+
+    box.append("img")
+      .attr("src", "../assets/inteli_blockchain_logo.jpeg")
+      .attr("alt", "Inteli Blockchain")
+      .style("max-width", "320px")
+      .style("max-height", "320px")
+      .style("border-radius", "10px")
+      .style("object-fit", "contain");
+
+    box.append("p")
+      .style("font-size", "0.9rem")
+      .style("color", "#aaa")
+      .text("Inteli Blockchain");
+
+    const closeBtn = box.append("button")
+      .style("background", "#f7931a")
+      .style("border", "none")
+      .style("color", "#000")
+      .style("font-weight", "bold")
+      .style("padding", "8px 28px")
+      .style("border-radius", "8px")
+      .style("cursor", "pointer")
+      .style("font-size", "1rem")
+      .text("Fechar");
+
+    closeBtn
+      .on("mouseover", function() { d3.select(this).style("background", "#ffaa44"); })
+      .on("mouseout",  function() { d3.select(this).style("background", "#f7931a"); });
+
+    function openModal() {
+      overlay.style("display", "flex");
+      box.attr("class", null).attr("class", "modal-box-anim");
+    }
+
+    function closeModal() {
+      overlay.style("display", "none");
+    }
+
+    svg.on("click", openModal);
+    closeBtn.on("click", closeModal);
+    overlay.on("click", function(event) {
+      if (event.target === overlay.node()) closeModal();
+    });
+  </script>
+</body>
+</html>
