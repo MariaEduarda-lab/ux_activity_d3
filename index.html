@@ -19,8 +19,6 @@
       color: #fff;
     }
 
-    #bitcoin-container { cursor: pointer; }
-
     .bitcoin-circle {
       filter: drop-shadow(0 0 18px #f7931a88);
     }
@@ -36,6 +34,25 @@
 
     .modal-box-anim {
       animation: pop 0.25s ease;
+    }
+
+    @keyframes bitcoin-roll {
+      from {
+        transform: translateX(calc(-50vw - 120px)) rotate(0deg);
+        opacity: 0;
+      }
+      20% {
+        opacity: 1;
+      }
+      to {
+        transform: translateX(0) rotate(720deg);
+        opacity: 1;
+      }
+    }
+
+    #bitcoin-container {
+      cursor: pointer;
+      animation: bitcoin-roll 1.2s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards;
     }
   </style>
 </head>
@@ -101,7 +118,7 @@
       .style("box-shadow", "0 0 40px #f7931a55");
 
     box.append("img")
-      .attr("src", "../assets/inteli_blockchain_logo.jpeg")
+      .attr("src", "https://media.licdn.com/dms/image/v2/D4D0BAQHSEN1MeBifpg/company-logo_200_200/B4DZx3WIa8JAAM-/0/1771528816816/inteli_blockchain_logo?e=1776297600&v=beta&t=kzOxZB5jFWwRl4_gLOBQo_viT-4vLSpUq4gTT5LUybc")
       .attr("alt", "Inteli Blockchain")
       .style("max-width", "320px")
       .style("max-height", "320px")
